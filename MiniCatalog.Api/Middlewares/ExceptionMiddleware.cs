@@ -27,13 +27,14 @@ public class ExceptionMiddleware
         {
             await HandleException(context, HttpStatusCode.NotFound, ex.Message);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             await HandleException(
                 context,
                 HttpStatusCode.InternalServerError,
                 "Erro interno inesperado"
             );
+            //Console.WriteLine(ex.Message);
         }
     }
 

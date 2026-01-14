@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using MiniCatalog.Application.DTOs.Audit;
+﻿using MiniCatalog.Application.DTOs.Audit;
 using MiniCatalog.Application.DTOs.Categoria;
 using MiniCatalog.Application.Exceptions;
 using MiniCatalog.Application.Interfaces.Repositories;
@@ -56,19 +55,19 @@ public class CategoriaService
         };
     }
 
-    public async Task ActivateAsync(Guid categoryId, Guid userId)
+    public async Task ActivateAsync(Guid categoriaId, Guid userId)
     {
-        var category = await _categoryRepository.GetByIdAsync(categoryId)
-                       ?? throw new NotFoundException("Categoria não encontrada.");
+        var categoria = await _categoryRepository.GetByIdAsync(categoriaId)
+                        ?? throw new NotFoundException("Categoria não encontrada.");
         
-        category.Ativar();
-        await _categoryRepository.UpdateAsync(category);
+        categoria.Ativar();
+        await _categoryRepository.UpdateAsync(categoria);
         
         var auditLogDto = new AuditLogDto
         {
             Action = "CATEGORIA_ATIVADA",
             UserId = userId,
-            Payload = JsonSerializer.Serialize(new { category.Id, category.Nome }),
+            Payload = new { categoria.Id, categoria.Nome },
             Timestamp = DateTime.UtcNow
         };
         await _auditService.AuditLogAsync(auditLogDto);

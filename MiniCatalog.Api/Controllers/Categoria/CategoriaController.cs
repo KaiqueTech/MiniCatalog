@@ -31,19 +31,19 @@ public class CategoriaController : ControllerBase
         return Ok(categoriaResult);
     }
 
-    [HttpPost("{id}/activate")]
+    [HttpPut("{id}/activate")]
     public async Task<IActionResult> Activate(Guid id)
     {
         var userId = Guid.NewGuid();
         await _service.ActivateAsync(id, userId);
-        return NoContent();
+        return Ok(new { Message = "Categoria ativada com sucesso." });
     }
     
-    [HttpPost("{id}/deactivate")]
+    [HttpPut("{id}/deactivate")]
     public async Task<IActionResult> Deactivate(Guid id)
     {
         var userId = Guid.NewGuid();
         await _service.DesactivateAsync(id, userId);
-        return NoContent();
+        return Ok(new { Message = "Categoria desativada com sucesso." });
     }
 }

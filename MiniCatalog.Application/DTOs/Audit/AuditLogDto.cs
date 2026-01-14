@@ -2,7 +2,7 @@
 
 public class AuditLogDto
 {
-    public Guid Id { get; set; }
+    public Guid LogId { get; set; }
     public string Action { get; set; }
     public object Payload { get; set; }
     public Guid UserId { get; set; }

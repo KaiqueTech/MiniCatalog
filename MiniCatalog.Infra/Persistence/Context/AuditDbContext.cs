@@ -12,9 +12,8 @@ public class AuditDbContext
     public AuditDbContext(MongoDbSettings settings)
     {
         var client = new MongoClient(settings.ConnectionString);
-        _database = client.GetDatabase(settings.Database);
+        _database = client.GetDatabase(settings.DatabaseName);
         
         AuditLogs = _database.GetCollection<AuditLogModel>("AuditLogs");
-        _database = client.GetDatabase(settings.Database);
     }
 }

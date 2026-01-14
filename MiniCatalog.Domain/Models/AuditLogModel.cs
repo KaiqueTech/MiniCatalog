@@ -1,21 +1,18 @@
-﻿using MiniCatalog.Domain.Common;
+﻿
+using MiniCatalog.Domain.Common;
 
 namespace MiniCatalog.Domain.Models;
 
-public class AuditLogModel : BaseEntity
+public class AuditLogModel : BaseEntityLog
 {
-    public Guid LogId { get; private set; }
     public string Action { get; private set; }
-    public Guid? UserId { get; private set; }
-    public DateTime Timestamp { get; private set; }
     public object Payload { get; private set; }
+    public Guid? UserId{ get; private set; }
 
-    public AuditLogModel(string action, Guid? userId, object payload)
+    public AuditLogModel(string action, object payload, Guid? userId)
     {
-        Id = Guid.NewGuid();
-        Action = action;
         UserId = userId;
+        Action = action;
         Payload = payload;
-        Timestamp = DateTime.UtcNow;
     }
 }

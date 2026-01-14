@@ -45,7 +45,7 @@ public class ItemService
         
         await _auditService.AuditLogAsync(new AuditLogDto
         {
-            Id = Guid.NewGuid(),
+            LogId = Guid.NewGuid(),
             Action = "ITEM_CADASTRADO",
             Payload = new { item.Id, item.Nome },
             UserId = userId,
@@ -83,7 +83,7 @@ public class ItemService
 
         await _auditService.AuditLogAsync(new AuditLogDto
         {
-            Id = Guid.NewGuid(),
+            LogId = Guid.NewGuid(),
             Action = "ITEM_ATIVADO",
             Payload = new { item.Id, item.Nome },
             UserId = userId,
@@ -101,7 +101,7 @@ public class ItemService
 
         await _auditService.AuditLogAsync(new AuditLogDto
         {
-            Id = Guid.NewGuid(),
+            LogId = Guid.NewGuid(),
             Action = "ITEM_DESATIVADO",
             Payload = new { item.Id, item.Nome },
             UserId = userId,
