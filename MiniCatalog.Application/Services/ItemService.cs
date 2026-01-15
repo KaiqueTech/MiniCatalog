@@ -1,5 +1,6 @@
 ﻿using MiniCatalog.Application.DTOs.Audit;
 using MiniCatalog.Application.DTOs.Item;
+using MiniCatalog.Application.DTOs.Search;
 using MiniCatalog.Application.Exceptions;
 using MiniCatalog.Application.Interfaces.Repositories;
 using MiniCatalog.Application.Interfaces.Services;
@@ -25,7 +26,7 @@ public class ItemService
 
     public async Task<Guid> CreateAsync(ItemRequestDto dto, Guid userId)
     {
-        var categoria = await _categoryRepo.GetByIdAsync(dto.CategoriaId)
+       var categoria = await _categoryRepo.GetByIdAsync(dto.CategoriaId)
                        ?? throw new NotFoundException("Categoria não encontrada");
 
         if (await _itemRepo.ExistsAsync(dto.Nome, dto.CategoriaId))
@@ -61,16 +62,30 @@ public class ItemService
         if (item == null)
             throw new NotFoundException("Item não encontrado.");
 
-        return new ItemResponseDto
-        {
-            Id = item.Id,
-            Nome = item.Nome,
-            Descricao = item.Descricao,
-            Categoria = item.Categoria.Nome,
-            Preco = item.Preco,
-            Ativo = item.Ativo,
-            Tags = item.Tags.Select(t => t.Tag).ToList()
-        };
+        return new ItemResponseDto(
+            item.Id,
+            item.Nome,
+            item.Descricao,
+            item.Preco,
+            item.Categoria.Nome,
+            item.Tags.Select(t => t.Tag).ToList(),
+            item.Ativo
+            );
+    }
+
+    public async Task<IEnumerable<ItemResponseDto>> GetAllAsync()
+    {
+        var items = await _itemRepo.GetAllAsync();
+        
+        return items.Select(item => new ItemResponseDto(
+            item.Id,                                     
+            item.Nome,                  
+            item.Descricao,               
+            item.Preco,           
+            item.Categoria?.Nome ?? "Sem Categoria",
+            item.Tags.Select(t => t.Tag).ToList(),
+            item.Ativo                                   
+        ));
     }
 
     public async Task AtivarAsync(Guid itemId, Guid userId)
@@ -108,4 +123,30 @@ public class ItemService
             Timestamp = DateTime.UtcNow
         });
     }
+    public async Task<SearchResultDto> SearchAsync(SearchFilterDto filterDto)
+    {
+        var tagList = filterDto.Tags?.Split(',', StringSplitOptions.RemoveEmptyEntries).ToArray();
+
+        var (entities, total, average) = await _itemRepo.SearchAdvancedAsync(
+            filterDto.Term, filterDto.CategoriaId, filterDto.Min, filterDto.Max, filterDto.Ativo, tagList, filterDto.Sort ?? "nome", filterDto.Page, filterDto.PageSize);
+        
+        var itemsDto = entities.Select(i => new ItemResponseDto(
+            i.Id,
+            i.Nome,
+            i.Descricao,
+            i.Preco,
+            i.Categoria.Nome,
+            i.Tags.Select(t => t.Tag).ToList(),
+            i.Ativo
+        ));
+
+        return new SearchResultDto(
+            itemsDto,
+            total,
+            average,
+            filterDto.Page,
+            (int)Math.Ceiling((double)total / filterDto.PageSize)
+        );
+    }
+    
 }

@@ -34,7 +34,7 @@ public class ExceptionMiddleware
                 HttpStatusCode.InternalServerError,
                 "Erro interno inesperado"
             );
-            //Console.WriteLine(ex.Message);
+            Console.WriteLine(ex.Message);
         }
     }
 

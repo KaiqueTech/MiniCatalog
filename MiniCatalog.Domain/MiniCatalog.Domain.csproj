@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Enums\" />
+      <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="10.0.1" />
     </ItemGroup>
 
 </Project>
