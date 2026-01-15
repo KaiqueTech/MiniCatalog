@@ -1,4 +1,5 @@
-﻿using MiniCatalog.Application.DTOs.Audit;
+﻿using FluentValidation;
+using MiniCatalog.Application.DTOs.Audit;
 using MiniCatalog.Application.DTOs.Categoria;
 using MiniCatalog.Application.Exceptions;
 using MiniCatalog.Application.Interfaces.Repositories;
@@ -11,31 +12,41 @@ public class CategoriaService
 {
     private readonly ICategoriaRepository _categoryRepository;
     private readonly IAuditService _auditService;
+    private IValidator<CategoriaRequestDto> _validator;
 
-    public CategoriaService(
-        ICategoriaRepository categoriaRepository,
-        IAuditService auditService)
+    public CategoriaService(ICategoriaRepository categoriaRepository, IAuditService auditService, IValidator<CategoriaRequestDto> validator)
     {
         _categoryRepository = categoriaRepository;
         _auditService = auditService;
+        _validator = validator;
     }
 
     public async Task<Guid> CreateAsync(CategoriaRequestDto dto, Guid userId)
     {
+        var validationResult = await _validator.ValidateAsync(dto);
+
+        if (!validationResult.IsValid)
+        {
+            var errors = string.Join(" ", validationResult.Errors.Select(e => e.ErrorMessage));
+            throw new BusinessException(errors);
+        }
+        
         if (await _categoryRepository.ExistsAsync(dto.Nome))
             throw new BusinessException("Já existe uma categoria com esse nome.");
         
         var category = new CategoriaModel(dto.Nome, dto.Descricao);
         
         await _categoryRepository.AddAsync(category);
-        
+
         var auditLogDto = new AuditLogDto
-        {
-            Action = "CATEGORIA_CRIADA",
-            UserId = userId,
-            Payload = new { category.Id, category.Nome },
-            Timestamp = DateTime.UtcNow
-        };
+        (
+            Guid.NewGuid(),
+            "CATEGORIA_CRIADA",
+            new { category.Id, category.Nome },
+             userId,
+             DateTime.UtcNow
+            );
+            
         await _auditService.AuditLogAsync(auditLogDto);
         
         return category.Id;
@@ -76,12 +87,13 @@ public class CategoriaService
         await _categoryRepository.UpdateAsync(categoria);
         
         var auditLogDto = new AuditLogDto
-        {
-            Action = "CATEGORIA_ATIVADA",
-            UserId = userId,
-            Payload = new { categoria.Id, categoria.Nome },
-            Timestamp = DateTime.UtcNow
-        };
+        (
+            Guid.NewGuid(),
+            "CATEGORIA_ATIVADA",
+            new { categoria.Id, categoria.Nome },
+             userId,
+             DateTime.UtcNow
+        );
         await _auditService.AuditLogAsync(auditLogDto);
     }
 
@@ -92,14 +104,16 @@ public class CategoriaService
 
         category.Desativar();
         await _categoryRepository.UpdateAsync(category);
-        
+
         var auditLogDto = new AuditLogDto
-        {
-            Action = "CATEGORIA_DESATIVADA",
-            UserId = userId,
-            Payload = new { category.Id, category.Nome },
-            Timestamp = DateTime.UtcNow
-        };
+        (
+            Guid.NewGuid(),
+            "CATEGORIA_DESATIVADA",
+            new { category.Id, category.Nome },
+            userId,
+            DateTime.UtcNow);
+            
+
         await _auditService.AuditLogAsync(auditLogDto);
     }
 }

@@ -17,11 +17,11 @@ public class CategoriaConfiguration : IEntityTypeConfiguration<CategoriaModel>
         builder.Property(c => c.Nome)
             .IsRequired()
             .HasMaxLength(150);
-
-
+        
         builder.HasIndex(c => c.Nome).IsUnique();
 
-
+        builder.Property(c => c.Descricao).HasMaxLength(500);
+        
         builder.Property(c => c.Ativa)
             .HasDefaultValue(true);
     }

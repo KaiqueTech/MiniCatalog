@@ -1,4 +1,5 @@
-﻿using MiniCatalog.Application.DTOs.Audit;
+﻿using FluentValidation;
+using MiniCatalog.Application.DTOs.Audit;
 using MiniCatalog.Application.DTOs.Item;
 using MiniCatalog.Application.DTOs.Search;
 using MiniCatalog.Application.Exceptions;
@@ -13,20 +14,26 @@ public class ItemService
     private readonly IItemRepository _itemRepo;
     private readonly ICategoriaRepository _categoryRepo;
     private readonly IAuditService _auditService;
+    private readonly IValidator<ItemRequestDto> _validator;
 
-    public ItemService(
-        IItemRepository itemRepo,
-        ICategoriaRepository categoryRepo,
-        IAuditService auditService)
+    public ItemService(IItemRepository itemRepo, ICategoriaRepository categoryRepo, IAuditService auditService, IValidator<ItemRequestDto> validator)
     {
         _itemRepo = itemRepo;
         _categoryRepo = categoryRepo;
         _auditService = auditService;
+        _validator = validator;
     }
 
     public async Task<Guid> CreateAsync(ItemRequestDto dto, Guid userId)
     {
-       var categoria = await _categoryRepo.GetByIdAsync(dto.CategoriaId)
+        var validationResult = await _validator.ValidateAsync(dto);
+
+        if (!validationResult.IsValid)
+        {
+            var errors = string.Join(" ", validationResult.Errors.Select(e => e.ErrorMessage));
+            throw new BusinessException(errors);
+        }
+        var categoria = await _categoryRepo.GetByIdAsync(dto.CategoriaId)
                        ?? throw new NotFoundException("Categoria não encontrada");
 
         if (await _itemRepo.ExistsAsync(dto.Nome, dto.CategoriaId))
@@ -45,13 +52,13 @@ public class ItemService
         await _itemRepo.AddAsync(item);
         
         await _auditService.AuditLogAsync(new AuditLogDto
-        {
-            LogId = Guid.NewGuid(),
-            Action = "ITEM_CADASTRADO",
-            Payload = new { item.Id, item.Nome },
-            UserId = userId,
-            Timestamp = DateTime.UtcNow
-        });
+        (
+             Guid.NewGuid(), 
+             "ITEM_CADASTRADO",
+            new { item.Id, item.Nome }, 
+             userId,
+            DateTime.UtcNow
+        ));
 
         return item.Id;
     }
@@ -97,13 +104,13 @@ public class ItemService
         await _itemRepo.UpdateAsync(item);
 
         await _auditService.AuditLogAsync(new AuditLogDto
-        {
-            LogId = Guid.NewGuid(),
-            Action = "ITEM_ATIVADO",
-            Payload = new { item.Id, item.Nome },
-            UserId = userId,
-            Timestamp = DateTime.UtcNow
-        });
+        (
+            Guid.NewGuid(),
+            "ITEM_ATIVADO",
+           new { item.Id, item.Nome }, 
+            userId,
+            DateTime.UtcNow
+        ));
     }
 
     public async Task DesativarAsync(Guid itemId, Guid userId)
@@ -115,13 +122,13 @@ public class ItemService
         await _itemRepo.UpdateAsync(item);
 
         await _auditService.AuditLogAsync(new AuditLogDto
-        {
-            LogId = Guid.NewGuid(),
-            Action = "ITEM_DESATIVADO",
-            Payload = new { item.Id, item.Nome },
-            UserId = userId,
-            Timestamp = DateTime.UtcNow
-        });
+        (
+            Guid.NewGuid(),
+            "ITEM_DESATIVADO",
+            new { item.Id, item.Nome },
+            userId,
+            DateTime.UtcNow
+        ));
     }
     public async Task<SearchResultDto> SearchAsync(SearchFilterDto filterDto)
     {

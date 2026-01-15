@@ -15,7 +15,7 @@ public class ItemRequestValidator : AbstractValidator<ItemRequestDto>
             .GreaterThan(0).WithMessage("O preço deve ser maior que zero.");
 
         RuleFor(x => x.CategoriaId)
-            .NotEmpty().WithMessage("A categoria é obrigatória.");
+            .NotEmpty().WithMessage("O Id da categoria é obrigatória.");
 
         RuleFor(x => x.Descricao)
             .MaximumLength(500).WithMessage("A descrição não pode exceder 500 caracteres.");

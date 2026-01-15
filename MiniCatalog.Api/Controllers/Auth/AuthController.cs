@@ -35,14 +35,15 @@ public class AuthController : ControllerBase
         return Ok(response);
     }
     
-    [HttpGet]
+    [HttpGet("me")]
     [Authorize]
     public async Task<IActionResult> GetMe()
     {
-        var email = User.FindFirstValue(ClaimTypes.Name);
-        if (string.IsNullOrEmpty(email))
-            return Unauthorized();
+        var email = User.FindFirstValue(ClaimTypes.Email) ?? User.FindFirstValue(ClaimTypes.Name);
 
+        if (string.IsNullOrEmpty(email))
+            return Unauthorized(new { error = "Identificador não encontrado no token" });
+        
         var userDto = await _authService.GetMeAsync(email);
         return Ok(userDto);
     }

@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 using MiniCatalog.Application.DTOs.Auth;
+using MiniCatalog.Application.Exceptions;
 using MiniCatalog.Application.Interfaces.Repositories;
 using MiniCatalog.Application.Interfaces.Services;
 using MiniCatalog.Domain.Enums;
@@ -13,21 +15,36 @@ public class AuthService : IAuthService
     private readonly UserManager<IdentityUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly ITokenService _tokenService;
+    private readonly IValidator<LoginDto> _loginValidator;
+    private readonly IValidator<RegisterDto> _registerValidator;
 
     public AuthService(
         IUserRepository userRepository,
         UserManager<IdentityUser> userManager,
         RoleManager<IdentityRole> roleManager,
-        ITokenService tokenService)
+        ITokenService tokenService,
+        IValidator<LoginDto> loginValidator,
+        IValidator<RegisterDto> registerValidator)
     {
         _userRepository = userRepository;
         _userManager = userManager;
         _roleManager = roleManager;
         _tokenService = tokenService;
+        _loginValidator = loginValidator;
+        _registerValidator = registerValidator;
     }
 
     public async Task<AuthResponseDto> RegisterAsync(RegisterDto request)
     {
+        var validationResult = await _registerValidator.ValidateAsync(request);
+
+        if (!validationResult.IsValid)
+        {
+            var errors = string.Join(" | ", validationResult.Errors.Select(e => e.ErrorMessage));
+            
+            return new AuthResponseDto(false, errors);
+        }
+        
         var identityUser = new IdentityUser { UserName = request.UserName, Email = request.Email };
         var result = await _userManager.CreateAsync(identityUser, request.Password);
 
@@ -37,7 +54,7 @@ public class AuthService : IAuthService
         var userDomain = new UserModel(
             request.Email,
             request.UserName,
-            request.dateOfBirth,
+            request.DateOfBirth,
             identityUser.Id 
         );
         await _userRepository.CreateUserAsync(userDomain);
@@ -58,6 +75,15 @@ public class AuthService : IAuthService
 
     public async Task<AuthResponseDto> LoginAsync(LoginDto request)
     {
+        var validationResult = await _loginValidator.ValidateAsync(request);
+
+        if (!validationResult.IsValid)
+        {
+            var errors = string.Join(" | ", validationResult.Errors.Select(e => e.ErrorMessage));
+            
+            return new AuthResponseDto(false, errors);
+        }
+        
         var identityUser = await _userManager.FindByEmailAsync(request.Email);
         
         if (identityUser == null || !await _userManager.CheckPasswordAsync(identityUser, request.Password))
@@ -70,18 +96,25 @@ public class AuthService : IAuthService
     public async Task<UserViewDto?> GetMeAsync(string email)
     {
         var identityUser = await _userManager.FindByEmailAsync(email);
-        var roles = await _userManager.GetRolesAsync(identityUser!);
+    
+        if (identityUser == null)
+        {
+            throw new NotFoundException($"Usuário com email {email} não encontrado no Identity.");
+        }
         
+        var roles = await _userManager.GetRolesAsync(identityUser);
         var roleString = roles.FirstOrDefault() ?? nameof(UserRole.Viewer);
         Enum.TryParse(roleString, out UserRole roleEnum);
-
-        var user = await _userRepository.GetByEmailAsync(email);
+        
+        var userDomain = await _userRepository.GetByEmailAsync(email);
+        if (userDomain == null)
+            throw new NotFoundException("Dados complementares do usuário não encontrados.");
 
         return new UserViewDto(
-            Nome: user.UserName,
-            Email: user.Email,
+            Nome: userDomain.UserName,
+            Email: userDomain.Email,
             Role: roleEnum,
-            DateOfBirth: user.DateOfBirth
+            DateOfBirth: userDomain.DateOfBirth
         );
     }
 }

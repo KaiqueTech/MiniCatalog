@@ -78,17 +78,17 @@ public class ImportService : IImportService
         }
         
         await _auditLogService.AuditLogAsync(new AuditLogDto
-        {
-            LogId = Guid.NewGuid(),
-            Action = "IMPORT_EXECUTED",
-            Payload = new { 
+        (
+            Guid.NewGuid(),
+            "IMPORT_EXECUTED",
+            new { 
                 TotalFound = response.Count, 
                 ImportedCount = imported, 
                 SkippedCount = skipped 
             },
-            UserId = userId,
-            Timestamp = DateTime.UtcNow
-        });
+            userId,
+            DateTime.UtcNow
+        ));
 
         return new ImportResultDto(response.Count, imported, skipped, messages);
     }

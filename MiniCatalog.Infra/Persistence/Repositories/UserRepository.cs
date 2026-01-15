@@ -25,7 +25,7 @@ public class UserRepository : IUserRepository
         return await _context.Users
             .FirstOrDefaultAsync(u => u.Email == email);
     }
-    
+
     public async Task<UserModel?> GetByIdentityIdAsync(string identityId)
     {
         return await _context.Users

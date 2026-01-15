@@ -2,4 +2,4 @@
 
 namespace MiniCatalog.Application.DTOs.Auth;
 
-public record RegisterDto(string UserName,string Email, string Password, UserRole Role, DateOnly dateOfBirth);
+public record RegisterDto(string UserName,string Email, string Password, UserRole Role, DateOnly DateOfBirth);

@@ -84,10 +84,13 @@ builder.Services.AddHttpClient();
 builder.Services.AddAppAuthorization();
 
 builder.Services.AddValidatorsFromAssemblyContaining<ItemRequestValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CategoriaRequestValidator>();
 
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();
+
+app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 app.UseSwagger();
 app.UseSwaggerUI();

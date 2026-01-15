@@ -73,10 +73,10 @@ public static class SeedData
             new
             {
                 Id = Guid.Parse("66666666-6666-6666-6666-666666666666"),
-                Nome = "Smartphone",
+                Nome = "TV 50 polegadas",
                 Descricao = "iPhone 14",
                 CategoriaId = catEletronicosId,
-                Preco = 8000m,
+                Preco = 10000m,
                 Ativo = true,
                 CreatedAt = new DateTime(2026, 1, 13, 0, 0, 0, DateTimeKind.Utc),
                 UpdatedAt = (DateTime?)null
