@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MiniCatalog.Application.DTOs.Audit;
 using MiniCatalog.Application.Interfaces.Repositories;
-using MiniCatalog.Application.Interfaces.Services;
 using MiniCatalog.Domain.Models;
 using MiniCatalog.Infra.Persistence.Context;
 
@@ -23,9 +21,24 @@ public class CategoriaRepository : ICategoriaRepository
         return resultado;
     }
 
+    public async Task<IEnumerable<CategoriaModel>> GetAllAsync()
+    {
+        return await _context.Categorias
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
     public async Task<bool> ExistsAsync(string nome)
     {
         return await _context.Categorias.AnyAsync(c => c.Nome == nome);
+    }
+
+    public async Task<CategoriaModel?> GetByNameAsync(string nome)
+    {
+        if (string.IsNullOrWhiteSpace(nome)) return null;
+        
+        return await _context.Categorias
+            .FirstOrDefaultAsync(c => c.Nome.ToLower() == nome.ToLower().Trim());
     }
 
     public async Task AddAsync(CategoriaModel categoria)

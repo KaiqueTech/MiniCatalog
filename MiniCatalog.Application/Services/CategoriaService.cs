@@ -47,12 +47,24 @@ public class CategoriaService
         if (categoria == null) return null;
 
         return new CategoriaResponseDto
-        {
-            Id = categoria.Id,
-            Nome = categoria.Nome,
-            Descricao = categoria.Descricao,
-            Ativa = categoria.Ativa
-        };
+        (
+            categoria.Id,
+            categoria.Nome,
+            categoria.Descricao,
+            categoria.Ativa
+        );
+    }
+    
+    public async Task<IEnumerable<CategoriaResponseDto>> GetAllAsync()
+    {
+        var categorias = await _categoryRepository.GetAllAsync();
+        
+        return categorias.Select(c => new CategoriaResponseDto(
+            c.Id,                                     
+            c.Nome,
+            c.Descricao,
+            c.Ativa
+        ));
     }
 
     public async Task ActivateAsync(Guid categoriaId, Guid userId)

@@ -8,9 +8,8 @@ public class CategoriaModel : BaseEntity
     public string? Descricao { get; private set; }
     public bool Ativa { get; private set; }
     
-    private CategoriaModel() { }
     
-    public CategoriaModel(string nome, string descricao)
+    public CategoriaModel(string nome, string? descricao)
     {
         Id = Guid.NewGuid();
         Nome = nome;
