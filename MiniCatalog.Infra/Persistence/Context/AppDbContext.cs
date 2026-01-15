@@ -1,14 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MiniCatalog.Domain.Models;
+using MiniCatalog.Infra.Persistence.Context.Seed;
 
 namespace MiniCatalog.Infra.Persistence.Context;
 
-public class AppDbContext : DbContext
+public class AppDbContext : IdentityDbContext<IdentityUser>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }
-    
+    public DbSet<UserModel> Users { get; set; }
     public DbSet<ItemModel>  Items { get; set; }
     public DbSet<ItemTagModel> ItemTags { get; set; }
     public DbSet<CategoriaModel>  Categorias { get; set; }
