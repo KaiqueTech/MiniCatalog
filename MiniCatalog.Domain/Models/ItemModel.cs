@@ -2,7 +2,7 @@
 
 namespace MiniCatalog.Domain.Models;
 
-public class ItemModel : BaseEntity
+public class ItemModel : BaseModel
 {
     private readonly List<ItemTagModel> _tags = new();
     
@@ -25,7 +25,7 @@ public class ItemModel : BaseEntity
         SetUpdated();
     }
     
-    public void Atualizar(string nome, string descricao, decimal preco)
+    public void UpdateItem(string nome, string? descricao, decimal preco)
     {
         Nome = nome;
         Descricao = descricao;
@@ -33,12 +33,12 @@ public class ItemModel : BaseEntity
         SetUpdated();
     }
 
-    public void Ativar()
+    public void Active()
     {
         Ativo = true;
     }
 
-    public void Desativar()
+    public void Disable()
     {
         Ativo = false;
     }

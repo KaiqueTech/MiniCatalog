@@ -1,6 +1,6 @@
 ﻿namespace MiniCatalog.Domain.Common;
 
-public abstract class BaseEntityLog
+public abstract class BaseLogModel
 {
     public Guid LogId { get; protected set; } = Guid.NewGuid();
 

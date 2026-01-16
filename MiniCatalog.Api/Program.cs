@@ -85,7 +85,7 @@ builder.Services.AddAppAuthorization();
 
 builder.Services.AddValidatorsFromAssemblyContaining<ItemRequestValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CategoriaRequestValidator>();
-
+builder.Services.AddValidatorsFromAssemblyContaining<CategoriaUpdateValidator>();
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();

@@ -41,7 +41,7 @@ public class CategoriaService
         var auditLogDto = new AuditLogDto
         (
             Guid.NewGuid(),
-            "CATEGORIA_CRIADA",
+            "CATEGORIA_CREATED",
             new { category.Id, category.Nome },
              userId,
              DateTime.UtcNow
@@ -77,6 +77,30 @@ public class CategoriaService
             c.Ativa
         ));
     }
+    
+    public async Task UpdateAsync(Guid id, CategoriaUpdateDto dto, Guid userId)
+    {
+        var categoria = await _categoryRepository.GetByIdAsync(id)
+                        ?? throw new NotFoundException("Categoria não encontrada.");
+        
+        if (!categoria.Nome.Equals(dto.Nome, StringComparison.OrdinalIgnoreCase))
+        {
+            if (await _categoryRepository.ExistsAsync(dto.Nome))
+                throw new BusinessException($"Já existe uma categoria cadastrada com o nome '{dto.Nome}'.");
+        }
+        
+        categoria.UpdateCategory(dto.Nome, dto.Descricao);
+        
+        await _categoryRepository.UpdateAsync(categoria);
+        
+        await _auditService.AuditLogAsync(new AuditLogDto(
+            Guid.NewGuid(),
+            "CATEGORIA_UPDATED",
+            new { categoria.Id, categoria.Nome, AntigoNome = categoria.Nome },
+            userId,
+            DateTime.UtcNow
+        ));
+    }
 
     public async Task ActivateAsync(Guid categoriaId, Guid userId)
     {
@@ -89,7 +113,7 @@ public class CategoriaService
         var auditLogDto = new AuditLogDto
         (
             Guid.NewGuid(),
-            "CATEGORIA_ATIVADA",
+            "CATEGORY_ACTIVE",
             new { categoria.Id, categoria.Nome },
              userId,
              DateTime.UtcNow
@@ -108,7 +132,7 @@ public class CategoriaService
         var auditLogDto = new AuditLogDto
         (
             Guid.NewGuid(),
-            "CATEGORIA_DESATIVADA",
+            "CATEGORY_DISABLE",
             new { category.Id, category.Nome },
             userId,
             DateTime.UtcNow);

@@ -235,7 +235,8 @@ namespace MiniCatalog.Infra.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Descricao")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -258,8 +259,8 @@ namespace MiniCatalog.Infra.Migrations
                             Id = new Guid("11111111-1111-1111-1111-111111111111"),
                             Ativa = true,
                             CreatedAt = new DateTime(2026, 1, 13, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Descricao = "Produtos eletrônicos",
-                            Nome = "Eletrônicos"
+                            Descricao = "Dispositivos eletrônicos",
+                            Nome = "Dispositivos"
                         },
                         new
                         {
@@ -274,8 +275,8 @@ namespace MiniCatalog.Infra.Migrations
                             Id = new Guid("33333333-3333-3333-3333-333333333333"),
                             Ativa = true,
                             CreatedAt = new DateTime(2026, 1, 13, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Descricao = "Serviços diversos",
-                            Nome = "Serviços"
+                            Descricao = "Vestuário feminino importado",
+                            Nome = "women's clothing"
                         });
                 });
 
@@ -295,8 +296,8 @@ namespace MiniCatalog.Infra.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -343,19 +344,9 @@ namespace MiniCatalog.Infra.Migrations
                         {
                             Id = new Guid("66666666-6666-6666-6666-666666666666"),
                             Ativo = true,
-                            CategoriaId = new Guid("11111111-1111-1111-1111-111111111111"),
-                            CreatedAt = new DateTime(2026, 1, 13, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Descricao = "iPhone 14",
-                            Nome = "Smartphone",
-                            Preco = 8000m
-                        },
-                        new
-                        {
-                            Id = new Guid("77777777-7777-7777-7777-777777777777"),
-                            Ativo = true,
                             CategoriaId = new Guid("22222222-2222-2222-2222-222222222222"),
                             CreatedAt = new DateTime(2026, 1, 13, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Descricao = "Padrões de projeto",
+                            Descricao = "Padrões de projeto e arquitetura",
                             Nome = "Livro C# Avançado",
                             Preco = 120m
                         });
@@ -401,33 +392,19 @@ namespace MiniCatalog.Infra.Migrations
                         {
                             Id = new Guid("99999999-9999-9999-9999-999999999999"),
                             CreatedAt = new DateTime(2026, 1, 13, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ItemId = new Guid("44444444-4444-4444-4444-444444444444"),
-                            Tag = "Intel"
-                        },
-                        new
-                        {
-                            Id = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
-                            CreatedAt = new DateTime(2026, 1, 13, 0, 0, 0, 0, DateTimeKind.Utc),
                             ItemId = new Guid("55555555-5555-5555-5555-555555555555"),
                             Tag = "Apple"
                         },
                         new
                         {
-                            Id = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
+                            Id = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
                             CreatedAt = new DateTime(2026, 1, 13, 0, 0, 0, 0, DateTimeKind.Utc),
                             ItemId = new Guid("66666666-6666-6666-6666-666666666666"),
                             Tag = "C#"
                         },
                         new
                         {
-                            Id = new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"),
-                            CreatedAt = new DateTime(2026, 1, 13, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ItemId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            Tag = "Avançado"
-                        },
-                        new
-                        {
-                            Id = new Guid("dddddddd-dddd-dddd-dddd-dddddddddddd"),
+                            Id = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
                             CreatedAt = new DateTime(2026, 1, 13, 0, 0, 0, 0, DateTimeKind.Utc),
                             ItemId = new Guid("66666666-6666-6666-6666-666666666666"),
                             Tag = "Avançado"

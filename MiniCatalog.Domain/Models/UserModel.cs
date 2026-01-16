@@ -2,7 +2,7 @@
 
 namespace MiniCatalog.Domain.Models;
 
-public class UserModel : BaseEntity
+public class UserModel : BaseModel
 {
     public string IdentityId { get; private set; }
     

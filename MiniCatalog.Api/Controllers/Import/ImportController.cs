@@ -22,7 +22,6 @@ public class ImportController : ControllerBase
     [Authorize(Policy = Policies.Admin)]
     public async Task<ActionResult<ImportResultDto>> ImportFromExternalApi()
     {
-        // 1. Extrai o UserId do Token (Claim NameIdentifier)
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out Guid userId))

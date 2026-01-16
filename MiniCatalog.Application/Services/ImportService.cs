@@ -34,8 +34,10 @@ public class ImportService : IImportService
         int imported = 0;
         int skipped = 0;
         
+        var categoryCache = new Dictionary<string, CategoriaModel>(StringComparer.OrdinalIgnoreCase);
+
         var response = await _httpClient.GetFromJsonAsync<List<ImportDto>>(ExternalApiUrl);
-        
+    
         if (response == null || !response.Any())
             return new ImportResultDto(0, 0, 0, new List<string> { "API externa não retornou dados." });
 
@@ -44,30 +46,28 @@ public class ImportService : IImportService
             try
             {
                 var categoryName = dto.Category ?? "Geral";
-                var categoryDescription = dto.Description ?? "Sem descricao";
-                var categoria = await _categoriaRepo.GetByNameAsync(categoryName);
-    
-                if (categoria == null)
+                
+                if (!categoryCache.TryGetValue(categoryName, out var categoria))
                 {
-                    categoria = new CategoriaModel(categoryName, categoryDescription);
-        
-                    await _categoriaRepo.AddAsync(categoria);
+                    categoria = await _categoriaRepo.GetByNameAsync(categoryName);
+                    
+                    if (categoria == null)
+                    {
+                        categoria = new CategoriaModel(categoryName, $"Importado: {categoryName}");
+                        await _categoriaRepo.AddAsync(categoria);
+                    }
+                
+                    categoryCache[categoryName] = categoria;
                 }
-
+                
                 if (await _itemRepo.ExistsAsync(dto.Title, categoria.Id))
                 {
                     skipped++;
                     messages.Add($"Ignorado: '{dto.Title}' já existe.");
                     continue; 
                 }
-                
-                var item = new ItemModel(
-                    dto.Title,
-                    dto.Description,
-                    categoria.Id,
-                    dto.Price
-                );
-
+            
+                var item = new ItemModel(dto.Title, dto.Description, categoria.Id, dto.Price);
                 await _itemRepo.AddAsync(item);
                 imported++;
             }

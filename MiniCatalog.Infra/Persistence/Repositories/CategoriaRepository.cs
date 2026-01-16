@@ -35,10 +35,8 @@ public class CategoriaRepository : ICategoriaRepository
 
     public async Task<CategoriaModel?> GetByNameAsync(string nome)
     {
-        if (string.IsNullOrWhiteSpace(nome)) return null;
-        
         return await _context.Categorias
-            .FirstOrDefaultAsync(c => c.Nome.ToLower() == nome.ToLower().Trim());
+            .FirstOrDefaultAsync(c => c.Nome == nome);
     }
 
     public async Task AddAsync(CategoriaModel categoria)

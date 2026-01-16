@@ -14,7 +14,5 @@ public interface IItemRepository
     Task<(IEnumerable<ItemModel> Items, int Total, decimal Average)> SearchAdvancedAsync(
         string? term, Guid? categoriaId, decimal? min, decimal? max, 
         bool? ativo, string[]? tags, string sort, int page, int pageSize);
-    
-    Task<bool> ExistsByNameAndCategoryAsync(string nome, Guid categoriaId);
     Task<IEnumerable<ItemModel>> GetAllWithCategoryAsync();
 }

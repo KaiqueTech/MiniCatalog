@@ -20,7 +20,7 @@ public class ItemConfiguration : IEntityTypeConfiguration<ItemModel>
         
         builder.HasIndex(i => i.Nome);
 
-        builder.Property(i => i.Descricao).HasMaxLength(500);
+        builder.Property(i => i.Descricao).HasMaxLength(2000);
 
 
         builder.Property(i => i.Preco)

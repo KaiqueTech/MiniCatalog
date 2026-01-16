@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MiniCatalog.Application.DTOs.Item;
 using MiniCatalog.Application.DTOs.Search;
@@ -22,7 +23,7 @@ public class ItemController : ControllerBase
     [Authorize(Policy = Policies.Editor)] 
     public async Task<IActionResult> Create(ItemRequestDto dto)
     {
-        var userId = Guid.NewGuid(); 
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!); 
         var id = await _service.CreateAsync(dto, userId);
         return CreatedAtAction(nameof(GetById), new { id }, null);
     }
@@ -58,8 +59,8 @@ public class ItemController : ControllerBase
     [Authorize(Policy = Policies.Admin)]
     public async Task<IActionResult> Activate(Guid id)
     {
-        var userId = Guid.NewGuid();
-        await _service.AtivarAsync(id, userId);
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        await _service.ActivateAsync(id, userId);
         return Ok(new { Message = "Item ativado com sucesso." });
     }
 
@@ -67,8 +68,8 @@ public class ItemController : ControllerBase
     [Authorize(Policy = Policies.Admin)]
     public async Task<IActionResult> Deactivate(Guid id)
     {
-        var userId = Guid.NewGuid();
-        await _service.DesativarAsync(id, userId);
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        await _service.DesableAsync(id, userId);
         return Ok(new { Message = "Item desativado com sucesso." });
     }
 }

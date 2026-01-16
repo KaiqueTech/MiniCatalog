@@ -2,7 +2,7 @@
 
 namespace MiniCatalog.Domain.Models;
 
-public class ItemTagModel : BaseEntity
+public class ItemTagModel : BaseModel
 { 
     public string Tag { get; private set; }
     public Guid ItemId { get; private set; }

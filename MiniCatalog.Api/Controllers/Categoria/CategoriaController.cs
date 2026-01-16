@@ -49,6 +49,17 @@ public class CategoriaController : ControllerBase
         return Ok(categoriasResult);
     }
 
+    [HttpPut]
+    [Authorize(Policy = Policies.Editor)]
+    public async Task<IActionResult> Update(Guid id, [FromBody] CategoriaUpdateDto dto)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+    
+        await _service.UpdateAsync(id, dto, userId);
+        
+        return NoContent();
+    }
+
     [HttpPut("{id}/activate")]
     [Authorize(Policy = Policies.Admin)]
     public async Task<IActionResult> Activate(Guid id)

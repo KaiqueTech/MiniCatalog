@@ -16,12 +16,14 @@ public class ItemService
     private readonly IAuditService _auditService;
     private readonly IValidator<ItemRequestDto> _validator;
 
-    public ItemService(IItemRepository itemRepo, ICategoriaRepository categoryRepo, IAuditService auditService, IValidator<ItemRequestDto> validator)
+    public ItemService(IItemRepository itemRepo, ICategoriaRepository categoryRepo,
+        IAuditService auditService, IValidator<ItemRequestDto> validator)
     {
         _itemRepo = itemRepo;
         _categoryRepo = categoryRepo;
         _auditService = auditService;
         _validator = validator;
+        
     }
 
     public async Task<Guid> CreateAsync(ItemRequestDto dto, Guid userId)
@@ -95,12 +97,12 @@ public class ItemService
         ));
     }
 
-    public async Task AtivarAsync(Guid itemId, Guid userId)
+    public async Task ActivateAsync(Guid itemId, Guid userId)
     {
         var item = await _itemRepo.GetByIdAsync(itemId)
                    ?? throw new NotFoundException("Item não encontrado");
 
-        item.Ativar();
+        item.Active();
         await _itemRepo.UpdateAsync(item);
 
         await _auditService.AuditLogAsync(new AuditLogDto
@@ -113,12 +115,12 @@ public class ItemService
         ));
     }
 
-    public async Task DesativarAsync(Guid itemId, Guid userId)
+    public async Task DesableAsync(Guid itemId, Guid userId)
     {
         var item = await _itemRepo.GetByIdAsync(itemId)
                    ?? throw new NotFoundException("Item não encontrado");
 
-        item.Desativar();
+        item.Disable();
         await _itemRepo.UpdateAsync(item);
 
         await _auditService.AuditLogAsync(new AuditLogDto

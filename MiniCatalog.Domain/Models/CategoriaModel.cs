@@ -2,7 +2,7 @@
 
 namespace MiniCatalog.Domain.Models;
 
-public class CategoriaModel : BaseEntity
+public class CategoriaModel : BaseModel
 {
     public string Nome { get; private set; }
     public string? Descricao { get; private set; }
@@ -17,8 +17,11 @@ public class CategoriaModel : BaseEntity
         Ativa = true;
     }
 
-    public void Atualizar(string nome, string? descricao)
+    public void UpdateCategory(string nome, string descricao)
     {
+        if (string.IsNullOrWhiteSpace(nome)) 
+            throw new ArgumentNullException("Nome inválido.");
+
         Nome = nome;
         Descricao = descricao;
         SetUpdated();

@@ -2,5 +2,5 @@
 
 public interface IReportService
 {
-    Task<(byte[] Content, string FileName)> ExportItemsToCsvAsync();
+    Task<(byte[] Content, string FileName)> ExportItemsToCsvAsync(Guid userId);
 }
