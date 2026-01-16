@@ -70,6 +70,7 @@ public class ImportService : IImportService
                 var item = new ItemModel(dto.Title, dto.Description, categoria.Id, dto.Price);
                 await _itemRepo.AddAsync(item);
                 imported++;
+                messages.Add($"Importado: '{dto.Title}' imported.");
             }
             catch (Exception ex)
             {
