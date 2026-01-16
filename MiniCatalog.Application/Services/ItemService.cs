@@ -78,7 +78,8 @@ public class ItemService
             item.Preco,
             item.Categoria.Nome,
             item.Tags.Select(t => t.Tag).ToList(),
-            item.Ativo
+            item.Ativo,
+            item.CreatedAt
             );
     }
 
@@ -93,7 +94,8 @@ public class ItemService
             item.Preco,           
             item.Categoria?.Nome ?? "Sem Categoria",
             item.Tags.Select(t => t.Tag).ToList(),
-            item.Ativo                                   
+            item.Ativo,
+            item.CreatedAt
         ));
     }
 
@@ -146,7 +148,8 @@ public class ItemService
             i.Preco,
             i.Categoria.Nome,
             i.Tags.Select(t => t.Tag).ToList(),
-            i.Ativo
+            i.Ativo,
+            i.CreatedAt
         ));
 
         return new SearchResultDto(

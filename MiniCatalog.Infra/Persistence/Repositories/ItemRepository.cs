@@ -84,13 +84,6 @@ public class ItemRepository : IItemRepository
 
         return (items, total, average);
     }
-    
-    public async Task<bool> ExistsByNameAndCategoryAsync(string nome, Guid categoriaId)
-    {
-        return await _context.Items
-            .AnyAsync(i => i.Nome.ToLower() == nome.ToLower().Trim() 
-                           && i.CategoriaId == categoriaId);
-    }
 
     public async Task<IEnumerable<ItemModel>> GetAllWithCategoryAsync()
     {

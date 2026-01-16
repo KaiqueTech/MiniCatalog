@@ -7,5 +7,6 @@ public record ItemResponseDto(
     decimal Preco,
     string Categoria,
     List<string> Tags,
-    bool Ativo
+    bool Ativo,
+    DateTime? DataCadastro
 );
