@@ -67,7 +67,7 @@ builder.Services.AddScoped<CategoriaService>();
 builder.Services.AddScoped<ItemService>();
 builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
 builder.Services.AddScoped<IAuditService, AuditService>();
-builder.Services.AddScoped<ReportService>();
+builder.Services.AddScoped<IReportService,ReportService>();
 builder.Services.AddScoped<IImportService, ImportService>();
 
 builder.Services.AddHttpClient();
