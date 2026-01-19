@@ -36,15 +36,6 @@ builder.Services.AddIdentityCore<IdentityUser>(options => {
     .AddDefaultTokenProviders()
     .AddSignInManager<SignInManager<IdentityUser>>();
 
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.Events.OnRedirectToLogin = context =>
-    {
-        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-        return Task.CompletedTask;
-    };
-});
-
 builder.Services.Configure<MongoDbSettings>(
     builder.Configuration.GetSection("MongoDbSettings"));
 
@@ -86,6 +77,7 @@ builder.Services.AddAppAuthorization();
 builder.Services.AddValidatorsFromAssemblyContaining<ItemRequestValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CategoriaRequestValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CategoriaUpdateValidator>();
+
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();

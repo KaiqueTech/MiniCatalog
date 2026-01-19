@@ -16,7 +16,7 @@ public class AuditLogRepository : IAuditLogRepository
         _filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
             "audit_logs.json");
     }
-    public async Task AddAsync(AuditLogModelModel log)
+    public async Task AddAsync(AuditLogModel log)
     {
         try
         {
@@ -29,7 +29,7 @@ public class AuditLogRepository : IAuditLogRepository
         
     }
 
-    public async Task SaveToFileAsync(AuditLogModelModel log)
+    public async Task SaveToFileAsync(AuditLogModel log)
     {
         var json = JsonSerializer.Serialize(log);
         await File.AppendAllTextAsync(_filePath, json);

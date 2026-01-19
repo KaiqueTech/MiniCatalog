@@ -136,10 +136,10 @@ public class ItemService
     }
     public async Task<SearchResultDto> SearchAsync(SearchFilterDto filterDto)
     {
-        var tagList = filterDto.Tags?.Split(',', StringSplitOptions.RemoveEmptyEntries).ToArray();
+            var tagList = filterDto.Tags?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(t => t.Trim()).ToArray();
 
-        var (entities, total, average) = await _itemRepo.SearchAdvancedAsync(
-            filterDto.Term, filterDto.CategoriaId, filterDto.Min, filterDto.Max, filterDto.Ativo, tagList, filterDto.Sort ?? "nome", filterDto.Page, filterDto.PageSize);
+            var (entities, total, average) = await _itemRepo.SearchAdvancedAsync(
+                filterDto.Term, filterDto.CategoriaId, filterDto.Min, filterDto.Max, filterDto.Ativo, tagList, filterDto.Sort ?? "nome", filterDto.Page, filterDto.PageSize);
         
         var itemsDto = entities.Select(item => new ItemResponseDto(
             item.Id,
@@ -152,13 +152,12 @@ public class ItemService
             item.CreatedAt
         ));
 
-        return new SearchResultDto(
-            itemsDto,
-            total,
-            average,
-            filterDto.Page,
-            (int)Math.Ceiling((double)total / filterDto.PageSize)
-        );
+            return new SearchResultDto(
+                itemsDto,
+                total,
+                average,
+                filterDto.Page,
+                (int)Math.Ceiling((double)total / filterDto.PageSize)
+            );
     }
-    
 }

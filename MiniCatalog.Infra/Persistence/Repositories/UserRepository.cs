@@ -16,19 +16,19 @@ public class UserRepository : IUserRepository
     
     public async Task CreateUserAsync(UserModel user)
     {
-        await _context.Users.AddAsync(user);
+        await _context.Profiles.AddAsync(user);
         await _context.SaveChangesAsync();
     }
 
     public async Task<UserModel?> GetByEmailAsync(string email)
     {
-        return await _context.Users
+        return await _context.Profiles
             .FirstOrDefaultAsync(u => u.Email == email);
     }
 
     public async Task<UserModel?> GetByIdentityIdAsync(string identityId)
     {
-        return await _context.Users
+        return await _context.Profiles
             .FirstOrDefaultAsync(u => u.IdentityId == identityId);
     }
 }

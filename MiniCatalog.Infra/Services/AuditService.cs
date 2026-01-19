@@ -17,7 +17,7 @@ public class AuditService : IAuditService
 
     public async Task AuditLogAsync(AuditLogDto dto)
     {
-        var log = new AuditLogModelModel(dto.Action, dto.Payload, dto.UserId);
+        var log = new AuditLogModel(dto.Action, dto.Payload, dto.UserId);
         
         await _auditRepository.AddAsync(log);
     }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MiniCatalog.Infra.Persistence.Context;
 
@@ -11,9 +12,11 @@ using MiniCatalog.Infra.Persistence.Context;
 namespace MiniCatalog.Infra.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260119091556_RenameTableUsersFromProfiles")]
+    partial class RenameTableUsersFromProfiles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -337,7 +340,7 @@ namespace MiniCatalog.Infra.Migrations
                             CategoriaId = new Guid("11111111-1111-1111-1111-111111111111"),
                             CreatedAt = new DateTime(2026, 1, 13, 0, 0, 0, 0, DateTimeKind.Utc),
                             Descricao = "iPhone 14",
-                            Nome = "Celular",
+                            Nome = "Smartphone",
                             Preco = 8000m
                         },
                         new
@@ -443,7 +446,7 @@ namespace MiniCatalog.Infra.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("profiles", (string)null);
+                    b.ToTable("users", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

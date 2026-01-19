@@ -17,10 +17,4 @@ public class UserModel : BaseModel
         DateOfBirth = dateOfBirth;
         IdentityId = identityId;
     }
-    
-    public void UpdateProfile(string userName, DateOnly dateOfBirth)
-    {
-        UserName = userName;
-        DateOfBirth = dateOfBirth;
-    }
 }
