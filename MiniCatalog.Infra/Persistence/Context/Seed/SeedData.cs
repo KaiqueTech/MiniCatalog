@@ -57,7 +57,7 @@ public static class SeedData
             new
             {
                 Id = itemSmartphoneId,
-                Nome = "Smartphone",
+                Nome = "Celular",
                 Descricao = "iPhone 14",
                 CategoriaId = catDispositivosId,
                 Preco = 8000m,

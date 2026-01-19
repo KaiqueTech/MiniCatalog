@@ -141,15 +141,15 @@ public class ItemService
         var (entities, total, average) = await _itemRepo.SearchAdvancedAsync(
             filterDto.Term, filterDto.CategoriaId, filterDto.Min, filterDto.Max, filterDto.Ativo, tagList, filterDto.Sort ?? "nome", filterDto.Page, filterDto.PageSize);
         
-        var itemsDto = entities.Select(i => new ItemResponseDto(
-            i.Id,
-            i.Nome,
-            i.Descricao,
-            i.Preco,
-            i.Categoria.Nome,
-            i.Tags.Select(t => t.Tag).ToList(),
-            i.Ativo,
-            i.CreatedAt
+        var itemsDto = entities.Select(item => new ItemResponseDto(
+            item.Id,
+            item.Nome,
+            item.Descricao,
+            item.Preco,
+            item.Categoria.Nome,
+            item.Tags.Select(t => t.Tag).ToList(),
+            item.Ativo,
+            item.CreatedAt
         ));
 
         return new SearchResultDto(
