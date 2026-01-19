@@ -4,6 +4,6 @@ namespace MiniCatalog.Application.Interfaces.Repositories;
 
 public interface IAuditLogRepository
 {
-    Task AddAsync(AuditLogModelModel log);
-    Task SaveToFileAsync(AuditLogModelModel log);
+    Task AddAsync(AuditLogModel log);
+    Task SaveToFileAsync(AuditLogModel log);
 }
