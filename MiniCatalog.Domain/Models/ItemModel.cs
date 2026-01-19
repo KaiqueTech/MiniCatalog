@@ -22,7 +22,6 @@ public class ItemModel : BaseModel
         CategoriaId = categoriaId;
         Preco = preco;
         Ativo = ativo;
-        SetUpdated();
     }
     
     public void UpdateItem(string nome, string? descricao, decimal preco)
@@ -36,11 +35,13 @@ public class ItemModel : BaseModel
     public void Active()
     {
         Ativo = true;
+        SetUpdated();
     }
 
     public void Disable()
     {
         Ativo = false;
+        SetUpdated();
     }
 
     public void AdicionarTag(string tag)
@@ -49,7 +50,6 @@ public class ItemModel : BaseModel
             return;
 
         _tags.Add(new ItemTagModel(tag));
-        SetUpdated();
     }
     
 }
