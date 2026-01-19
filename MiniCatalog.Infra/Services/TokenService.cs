@@ -27,8 +27,7 @@ public class TokenService : ITokenService
         {
             new Claim(ClaimTypes.NameIdentifier, identity.Id), 
             new Claim(ClaimTypes.Name, identity.UserName ?? ""),
-            new Claim(JwtRegisteredClaimNames.Email, identity.Email ?? ""),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new Claim(JwtRegisteredClaimNames.Email, identity.Email ?? "")
         };
 
         claims.AddRange(roles.Select(r => new Claim("role", r)));
