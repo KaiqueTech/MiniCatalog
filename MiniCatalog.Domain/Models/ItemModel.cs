@@ -23,6 +23,19 @@ public class ItemModel : BaseModel
         Preco = preco;
         Ativo = ativo;
     }
+
+    public static ItemModel CreateItem(string nome, string? descricao, Guid categoriaId, decimal preco,
+        bool ativo = true)
+    {
+        if(string.IsNullOrWhiteSpace(nome) || string.IsNullOrWhiteSpace(descricao))
+            throw new ArgumentNullException(nameof(nome), $"{nameof(descricao)} cannot be null or empty");
+        if(categoriaId != Guid.Empty)
+            throw new ArgumentNullException(nameof(categoriaId), $"{nameof(categoriaId)} cannot be null");
+        if(preco <= 0)
+            throw new ArgumentNullException(nameof(preco), $"{nameof(preco)} cannot be 0");
+        
+        return new ItemModel(nome, descricao, categoriaId, preco, ativo);
+    }
     
     public void UpdateItem(string nome, string? descricao, decimal preco)
     {

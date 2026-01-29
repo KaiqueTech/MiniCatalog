@@ -1,9 +1,11 @@
 ﻿using FluentValidation;
+using Microsoft.VisualBasic.CompilerServices;
 using MiniCatalog.Application.DTOs.Audit;
 using MiniCatalog.Application.DTOs.Categoria;
 using MiniCatalog.Application.Exceptions;
 using MiniCatalog.Application.Interfaces.Repositories;
 using MiniCatalog.Application.Interfaces.Services;
+using MiniCatalog.Application.Mappings;
 using MiniCatalog.Domain.Models;
 
 namespace MiniCatalog.Application.Services;
@@ -34,7 +36,7 @@ public class CategoriaService
         if (await _categoryRepository.ExistsAsync(dto.Nome))
             throw new BusinessException("Já existe uma categoria com esse nome.");
         
-        var category = new CategoriaModel(dto.Nome, dto.Descricao);
+        var category = CategoriaModel.CreateCategory(dto.Nome, dto.Descricao);
         
         await _categoryRepository.AddAsync(category);
 
@@ -56,14 +58,10 @@ public class CategoriaService
     {
         var categoria = await _categoryRepository.GetByIdAsync(categoryId);
         if (categoria == null) return null;
+        
+        var categoriaResponse = categoria.ToDto();
 
-        return new CategoriaResponseDto
-        (
-            categoria.Id,
-            categoria.Nome,
-            categoria.Descricao,
-            categoria.Ativa
-        );
+        return categoriaResponse;
     }
     
     public async Task<IEnumerable<CategoriaResponseDto>> GetAllAsync()

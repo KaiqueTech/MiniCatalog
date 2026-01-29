@@ -20,4 +20,12 @@
       <ProjectReference Include="..\MiniCatalog.Infra\MiniCatalog.Infra.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include="bin\Debug\net10.0\audit_logs.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="bin\Debug\net10.0\" />
+    </ItemGroup>
+
 </Project>

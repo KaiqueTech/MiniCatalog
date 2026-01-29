@@ -17,6 +17,14 @@ public class CategoriaModel : BaseModel
         Ativa = true;
     }
 
+    public static CategoriaModel CreateCategory(string nome, string descricao)
+    {
+        if (string.IsNullOrEmpty(nome) || string.IsNullOrEmpty(descricao))
+            throw new ArgumentNullException(nameof(nome));
+
+        return new CategoriaModel(nome, descricao);
+    }
+
     public void UpdateCategory(string nome, string descricao)
     {
         if (string.IsNullOrWhiteSpace(nome)) 

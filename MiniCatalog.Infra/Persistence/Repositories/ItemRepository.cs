@@ -58,7 +58,7 @@ public class ItemRepository : IItemRepository
             .AsQueryable();
         
         if (!string.IsNullOrWhiteSpace(term))
-            query = query.Where(i => i.Nome.Contains(term) || i.Descricao.Contains(term));
+            query = query.Where(i => i.Nome.Contains(term) || i.Descricao!.Contains(term));
 
         if (categoriaId.HasValue) query = query.Where(i => i.CategoriaId == categoriaId);
         if (min.HasValue) query = query.Where(i => i.Preco >= min.Value);

@@ -53,7 +53,7 @@ public class ImportService : IImportService
                     
                     if (categoria == null)
                     {
-                        categoria = new CategoriaModel(categoryName, $"Importado: {categoryName}");
+                        categoria = CategoriaModel.CreateCategory(categoryName, $"Importado: {categoryName}");
                         await _categoriaRepo.AddAsync(categoria);
                     }
                 
@@ -67,7 +67,7 @@ public class ImportService : IImportService
                     continue; 
                 }
             
-                var item = new ItemModel(dto.Title, dto.Description, categoria.Id, dto.Price);
+                var item = ItemModel.CreateItem(dto.Title, dto.Description, categoria.Id, dto.Price);
                 await _itemRepo.AddAsync(item);
                 imported++;
                 messages.Add($"Importado: '{dto.Title}' imported.");

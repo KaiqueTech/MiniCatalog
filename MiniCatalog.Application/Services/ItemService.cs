@@ -5,6 +5,7 @@ using MiniCatalog.Application.DTOs.Search;
 using MiniCatalog.Application.Exceptions;
 using MiniCatalog.Application.Interfaces.Repositories;
 using MiniCatalog.Application.Interfaces.Services;
+using MiniCatalog.Application.Mappings;
 using MiniCatalog.Domain.Models;
 
 namespace MiniCatalog.Application.Services;
@@ -41,12 +42,7 @@ public class ItemService
         if (await _itemRepo.ExistsAsync(dto.Nome, dto.CategoriaId))
             throw new BusinessException("Item duplicado");
 
-        var item = new ItemModel(
-            dto.Nome,
-            dto.Descricao,
-            dto.CategoriaId,
-            dto.Preco
-        );
+        var item = ItemModel.CreateItem(dto.Nome, dto.Descricao, dto.CategoriaId, dto.Preco);
 
         foreach (var tag in dto.Tags)
             item.AdicionarTag(tag);
@@ -71,16 +67,9 @@ public class ItemService
         if (item == null)
             throw new NotFoundException("Item não encontrado.");
 
-        return new ItemResponseDto(
-            item.Id,
-            item.Nome,
-            item.Descricao,
-            item.Preco,
-            item.Categoria.Nome,
-            item.Tags.Select(t => t.Tag).ToList(),
-            item.Ativo,
-            item.CreatedAt
-            );
+        var itemResponse = item.ToDto();
+
+        return itemResponse;
     }
 
     public async Task<IEnumerable<ItemResponseDto>> GetAllAsync()
@@ -137,6 +126,7 @@ public class ItemService
     public async Task<SearchResultDto> SearchAsync(SearchFilterDto filterDto)
     {
             var tagList = filterDto.Tags?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(t => t.Trim()).ToArray();
+            
 
             var (entities, total, average) = await _itemRepo.SearchAdvancedAsync(
                 filterDto.Term, filterDto.CategoriaId, filterDto.Min, filterDto.Max, filterDto.Ativo, tagList, filterDto.Sort ?? "nome", filterDto.Page, filterDto.PageSize);

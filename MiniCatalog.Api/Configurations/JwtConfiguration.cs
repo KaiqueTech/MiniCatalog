@@ -29,8 +29,8 @@ public static class JwtConfiguration
                     ValidAudience = jwtSettings.Audience,
                     ClockSkew = TimeSpan.Zero,
                     
-                    RoleClaimType = "role",
-                    NameClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+                    //RoleClaimType = "role",
+                    //NameClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
                 };
                 
             });
